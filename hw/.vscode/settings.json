@@ -1,0 +1,4 @@
+{
+    "markdown.updateLinksOnFileMove.enabled": "prompt",
+    "editor.wordWrap": "off"
+}

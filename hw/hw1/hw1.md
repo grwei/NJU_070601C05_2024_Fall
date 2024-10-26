@@ -37,12 +37,12 @@ print_background: false
   - [Problem 5](#problem-5)
     - [Theory (P5)](#theory-p5)
     - [Results (P5)](#results-p5)
+  - [Acknowledgement](#acknowledgement)
   - [Appendix](#appendix)
     - [Matlab code for Problem 3](#matlab-code-for-problem-3)
     - [Matlab code for Problem 5](#matlab-code-for-problem-5)
       - [hw1_5.m](#hw1_5m)
       - [ModWaveNumAnalysis.m](#modwavenumanalysism)
-  - [Acknowledgement](#acknowledgement)
   - [Contact Information](#contact-information)
 
 <!-- /code_chunk_output -->
@@ -522,6 +522,10 @@ $$
 
 ![modified wavenumber analysis results](fig_5_1_mod_wave_num_results.svg "modified wavenumber analysis results")
 
+## Acknowledgement
+
+&ensp; &ensp; I thank ...
+
 ## Appendix
 
 ### Matlab code for Problem 3
@@ -743,10 +747,6 @@ classdef ModWaveNumAnalysis < handle
     end
 end
 ```
-
-## Acknowledgement
-
-&ensp; &ensp; I thank ...
 
 ## Contact Information
 

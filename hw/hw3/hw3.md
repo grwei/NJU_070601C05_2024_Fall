@@ -26,14 +26,13 @@ print_background: true
 <!-- code_chunk_output -->
 
 - [Homework 3](#homework-3)
-  - [Table of Contents {ignore=true}](#table-of-contents-ignoretrue)
   - [Problem 1](#problem-1)
   - [Problem 2](#problem-2)
   - [Acknowledgement](#acknowledgement)
   - [Contact Information](#contact-information)
   - [Appendix](#appendix)
     - [Matlab code for problem 1](#matlab-code-for-problem-1)
-      - [hw3\_1.m](#hw3_1m)
+      - [hw3_1.m](#hw3_1m)
       - [AdvecProb2D.m](#advecprob2dm)
 
 <!-- /code_chunk_output -->

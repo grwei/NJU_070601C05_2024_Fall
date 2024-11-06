@@ -30,6 +30,7 @@ print_background: true
   - [Problem 2](#problem-2)
   - [Problem 3](#problem-3)
   - [Acknowledgement](#acknowledgement)
+  - [Contact Information](#contact-information)
   - [Appendix](#appendix)
     - [Matlab code for problem 1](#matlab-code-for-problem-1)
       - [hw2_1.m](#hw2_1m)
@@ -38,7 +39,6 @@ print_background: true
       - [hw2_2.m](#hw2_2m)
       - [hw2_3.m](#hw2_3m)
       - [AdvecProb2D.m](#advecprob2dm)
-  - [Contact Information](#contact-information)
 
 <!-- /code_chunk_output -->
 
@@ -460,7 +460,7 @@ $$
     \tag{2.23}
     \left\{
         \begin{aligned}
-           & c_t + u c_x = 0, \quad t \le 0, \; x \in [0, L], \\
+           & c_t + u c_x = 0, \quad t \ge 0, \; x \in [0, L], \\
            & \text{(I.C.)} \quad \left. c \right|_{t = 0} = c^0(x),\\
            & \text{(B.C.)} \quad  \left. c \right|_{x = 0} = \left. c \right|_{x = L} = 0.
         \end{aligned}
@@ -499,13 +499,13 @@ $$
     \left\{
         \begin{aligned}
             & c^{n+1}_j = (1 - \text{Cr}) c^n_j + \text{Cr} \, c_{j-1}^{n}, \quad n \in \mathbb{N}, \; j \in \mathbb{Z} \cap [0, L / h], \\
-            & c_j^0 = \left\{
+            & \text{(I.C.)} \quad c_j^0 = \left\{
                 \begin{aligned}
                     & 1, \quad & jh \in (0, 0.5], \\
                     & 0, \quad & jh \notin (0, 0.5],
                 \end{aligned}
             \right. \\
-            & c_j^n = 0, \quad jh \in (-\infty, 0] \cup [L, +\infty).
+            & \text{(B.C.)} \quad c_j^n = 0, \quad jh \in (-\infty, 0] \cup [L, +\infty).
         \end{aligned}
     \right.
 \end{equation*}
@@ -995,7 +995,7 @@ $$
 \end{equation*}
 $$
 
-为 corner transport upwind (CTU) scheme. CTU 方案最早是由 Colella[^1] ([1990](https://doi.org/10.1016/0021-9991(90)90233-Q)) 提出的, 尽管他的出发点不同于这里的.
+为 **corner transport upwind (CTU) scheme**. CTU 方案最早是由 Colella[^1] ([1990](https://doi.org/10.1016/0021-9991(90)90233-Q)) 提出的, 尽管他的出发点不同于这里的.
 
 [^1]: Phillip Colella (1990), Multidimensional upwind methods for hyperbolic conservation laws, *Journal of Computational Physics*, *87* (1), <https://doi.org/10.1016/0021-9991(90)90233-Q>
 
@@ -1029,7 +1029,7 @@ $$
 
 可见, 原迎风格式的 (3.9b) 中导致初值变形的交叉偏导项, 在 CTU 格式中消失, 而引入的新误差项是 $\mathcal{O}(\tau h)$ 的高阶小量.
 
-&ensp; &emsp; $\color{blue} \text{\bf 问题: CTU (3.18) 算是几阶精度? 空间一阶, 时间超一阶?}$ 另外, 如何把 (3.18) 隐藏在 $\mathcal{O}$ 中的 $\tau h$ 项提取出来?
+&ensp; &emsp; <span style="color: blue;">问题: CTU (3.18) 算是几阶精度? 空间一阶, 时间超一阶?</span> 另外, 如何把 (3.18) 隐藏在 $\mathcal{O}$ 中的 $\tau h$ 项提取出来? (应该多展开一阶就行)
 
 &ensp; &emsp; 用 CTU 格式 (3.16) 重复 **(c)** 小节的实验, 结果示于下面三个图. 可见:
 
@@ -1047,13 +1047,13 @@ $$
 
 ![integrating 2D advection problem using CTU scheme, fixed delta_t (fine), changing delta_x](fig/fig_3_CTU_Cr_compare_fixed_delta_t_fine.svg "integrating 2D advection problem using CTU scheme, fixed delta_t (fine), changing delta_x")
 
-&ensp; &emsp; **(e)** 从前一小节的实验中, 已观察到 CTU 格式 (3.16) 的稳定性条件似乎是 $\text{Cr}_x, \text{Cr}_y \in (0, 1]^2$. 下面用 Fourier 分析予以论证. Eq. (3.16) 的复增长因子
+&ensp; &emsp; **(e)** 从前一小节的实验中, 已观察到 CTU 格式 (3.16) 的稳定性条件似乎是 $\text{Cr}_x, \text{Cr}_y \in (0, 1]^2$. 下面用 Fourier 分析予以论证. Eq. (3.16) 的复增长因子 ($u \mathrel{\vcenter{\stackrel{\scriptstyle \ge}{\scriptstyle <}}} 0, \, v \mathrel{\vcenter{\stackrel{\scriptstyle \ge}{\scriptstyle <}}} 0$)
 
 $$
 \begin{equation*}
-    \tag{3.19}
+    \tag{3.19a}
     \begin{aligned}
-        G(\boldsymbol{\xi}, \boldsymbol{h}, \tau) & = (1 - \text{Cr}_x - \text{Cr}_y + \text{Cr}_x \text{Cr}_y) \\
+        G(\boldsymbol{\xi}, \boldsymbol{h}, \tau) = (1 & - \text{Cr}_x - \text{Cr}_y + \text{Cr}_x \text{Cr}_y) \\
         & + \text{Cr}_x (1 - \text{Cr}_y) \mathrm{e}^{\mp \mathrm{i} \xi_x h_x} \\
         & + \text{Cr}_y (1 - \text{Cr}_x) \mathrm{e}^{\mp \mathrm{i} \xi_y h_y} \\
         & + \text{Cr}_x \text{Cr}_y \mathrm{e}^{\mp \mathrm{i} \xi_x h_x} \mathrm{e}^{\mp \mathrm{i} \xi_y h_y}.
@@ -1061,11 +1061,20 @@ $$
 \end{equation*}
 $$
 
-要使 (3.16) 稳定, 就是要选 $\boldsymbol{h}, \tau$ 使 $|G| \le 1$ 对一切 $|\xi_x h_x| \le \pi, |\xi_y h_y| \le \pi$ 成立. $\color{blue} \text{\bf 这个不等式一时不知如何严格讨论}$, 只好先编写计算机程序来实现参数扫描, 找数值结论. 下图 (a) 提示, 稳定性条件确是
+要使 (3.16) 稳定, 就是要选 $\boldsymbol{h}, \tau$ 使
+
 $$
 \begin{equation*}
     \tag{3.20}
-    (\text{Cr}_x, \text{Cr}_y) \in (0, 1]^2,
+    |G| \le 1 \quad (\forall |\xi_x h_x| \le \pi, \; |\xi_y h_y| \le \pi)
+\end{equation*}
+$$
+
+成立. 这个不等式一时不知如何严格讨论, 于是编写计算机程序来实现参数扫描, 试图从数值结果中找灵感. 下图 (a) 提示, 稳定性条件是
+$$
+\begin{equation*}
+    \tag{3.21}
+    (\text{Cr}_x, \text{Cr}_y) \in [0, 1]^2,
 \end{equation*}
 $$
 
@@ -1073,9 +1082,35 @@ $$
 
 ![CTU scheme stability criteria](fig/Cr_stability.svg "CTU scheme stability criteria")
 
+Eq. (3.21) 这样漂亮的结果, 若不能由 (3.20) 通过演绎推理获得, 将令人沮丧. 事实上, 只需把 (3.19a) 写成
+
+$$
+\begin{equation*}
+    \tag{3.19b}
+    G(\boldsymbol{\xi}, \boldsymbol{h}, \tau) = (1 - \text{Cr}_x + \text{Cr}_x \, \mathrm{e}^{\mp \mathrm{i} \xi_x h_x})(1 - \text{Cr}_y + \text{Cr}_y \, \mathrm{e}^{\mp \mathrm{i} \xi_y h_y}),
+\end{equation*}
+$$
+
+就能利用
+
+$$
+\begin{equation*}
+    \tag{3.22}
+    \max_{|\theta| \le \pi}{ \left| x + y \mathrm{e}^{\mathrm{i} \theta} \right|} = |x| + |y|, \quad x, y \in \mathbb{C}
+\end{equation*}
+$$
+
+这一事实, 看出 (3.20) 成立 iff. (3.21) 成立. 可见, 与前向 Euler 二维简单迎风格式 (3.3) 相比, CTU 格式 (3.16) 的稳定性条件 (3.21) 更宽松 (对比 (3.14)), 使时间步长可取得更大, 从而加快了积分.
+
 ## Acknowledgement
 
 &ensp; &emsp; I thank ...
+
+## Contact Information
+
+- **Author:** Guorui Wei (危国锐)
+- **E-mail:** [313017602@qq.com](mailto:313017602@qq.com)
+- **Website:** <https://github.com/grwei>
 
 ## Appendix
 
@@ -2180,9 +2215,3 @@ classdef AdvecProb2D < handle
     end % end of `methods (Access=private)`
 end % end of `classdef AdvecProb2D < handle`
 ```
-
-## Contact Information
-
-- **Author:** Guorui Wei (危国锐)
-- **E-mail:** [313017602@qq.com](mailto:313017602@qq.com)
-- **Website:** <https://github.com/grwei>

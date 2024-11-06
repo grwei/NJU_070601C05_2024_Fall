@@ -38,12 +38,12 @@ print_background: false
     - [Theory (P5)](#theory-p5)
     - [Results (P5)](#results-p5)
   - [Acknowledgement](#acknowledgement)
+  - [Contact Information](#contact-information)
   - [Appendix](#appendix)
     - [Matlab code for Problem 3](#matlab-code-for-problem-3)
     - [Matlab code for Problem 5](#matlab-code-for-problem-5)
       - [hw1_5.m](#hw1_5m)
       - [ModWaveNumAnalysis.m](#modwavenumanalysism)
-  - [Contact Information](#contact-information)
 
 <!-- /code_chunk_output -->
 
@@ -526,6 +526,12 @@ $$
 
 &ensp; &ensp; I thank ...
 
+## Contact Information
+
+- **Author:** Guorui Wei (危国锐)
+- **E-mail:** [313017602@qq.com](mailto:313017602@qq.com)
+- **Website:** <https://github.com/grwei>
+
 ## Appendix
 
 ### Matlab code for Problem 3
@@ -747,9 +753,3 @@ classdef ModWaveNumAnalysis < handle
     end
 end
 ```
-
-## Contact Information
-
-- **Author:** Guorui Wei (危国锐)
-- **E-mail:** [313017602@qq.com](mailto:313017602@qq.com)
-- **Website:** <https://github.com/grwei>

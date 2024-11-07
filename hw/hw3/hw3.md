@@ -14,7 +14,7 @@ print_background: true
 - **Course:** Numerical Solutions to PDEs - FALL 2024
 - **Instructor:** Zhou, Bowen ([周博闻](https://as.nju.edu.cn/54/79/c11339a218233/page.htm))
 - **Due date:** Oct. 25, 2024
-- **Submit date:** Nov. 7, 2024
+- **Submitted date:** Nov. 7, 2024
 - **Problem set:** [PS3.pdf](https://box.nju.edu.cn/d/439906db314e411489a3/files/?p=%2FProblemSets%2FPS3.pdf)
 
 > &ensp; &ensp; Describe the setup and each step in your solutions with words and clearly label your final answers. Use Matlab for plotting and programming and include your code as an appendix to your problem set.
@@ -480,7 +480,7 @@ $$
 \end{equation*}
 $$
 
-看出对于使 $\text{Cr} \, \sin{(\xi h)} = \pm 1$ 的 $\xi$ -单波, 用格式 (1.13) 的积分结果没有相位误差, 但有不断增长的幅值误差, the scheme is unstable and divergent.
+看出对于使 $\text{Cr} \, \sin{(\xi h)} = \pm 1$ 的 $\xi$ -单波, 用格式 (1.13) 的积分结果没有相位误差, 但有不断增长的幅值误差, the scheme is unstable and divergent. 这是对于周期信号而言的. 而对于 $h \mathbb{Z}$ 上的平方可和的信号, 其频谱密度关于波数 $\xi$ 是在 $[-\pi / h, \pi / h)$ 上连续分布, 故至多可数个频谱分量的强度不影响叠加结果, 所以认为 $\mathrm{Cr} = 1$ 依然保证格式 (1.13) 的稳定性. <span style="color: blue;">对于有限长度的非周期信号, 格式 (1.13) 需要设置合适的初始和边界条件, 上述 Fourier 分析似乎不能严格地适用?</span>
 
 &ensp; &emsp; 综上, 格式 (1.13) 稳定的充要条件是
 
@@ -493,27 +493,123 @@ $$
 
 当格式稳定时, 数值解中存在虚假的计算模式, 特征值 (1.26) 与精确行为特征值 (1.28) 的差异造成数值解的稳定振荡现象.
 
-&ensp; &emsp; **(d)** 为缓解 Leap-frog central diff. 格式 (1.13) 的稳定振荡 (computational mode) 现象, 一种方案是引入 Robert–Asselin (RA) time filter (Robert[^2], [1966](https://doi.org/10.2151/jmsj1965.44.5_237); Asselin[^3], [1972](https://doi.org/10.1175/1520-0493(1972)100<0487:FFFTI>2.3.CO;2)). 具体来说, 就是在**每次**完成 $t_{n+1}$ 时步的积分**之后**, 执行赋值语句 (Ferziger[^5] *et al*., [2020](https://doi.org/10.1007/978-3-319-99693-6), Eq. (6.47))
+&ensp; &emsp; Eq. (1.36b) 是从频谱空间得到的结果; 下面, 我们转向物理空间, 探讨 $\mathrm{Cr} = \pm 1$ 时格式 (1.13) 的稳定性. 这时 Leap-frog central diff. (LF_CD) 迭代格式 (1.3) 成为
 
 $$
 \begin{equation*}
     \tag{1.38}
+    c_j^{n+1} - c_{j \mp 1}^n = (-1)(c_{j \pm 1}^n - c_j^{n-1}).
+\end{equation*}
+$$
+
+若首个时间步的数值积分结果精确, 例如用 $\mathrm{Cr} = \pm 1$ 的迎风格式使 $c^0$ 和 $c^1$ 还原精确解, 则用 LF_CD 方案 (1.38) 的数值积分
+
+$$
+\begin{equation*}
+    \tag{1.39}
+    c^n_j = c^0_{j \mp n} = c^0(x_j \mp n\tau u)
+\end{equation*}
+$$
+
+就是精确解.
+
+&ensp; &emsp; 对于 $\mathrm{Cr} = 1$ 的 LF_CD 方案 (1.38), 若在首个时间步的积分引入一个周期为四个网格距的扰动, 情况将明显不同. 定义
+
+$$
+\begin{equation*}
+    \tag{1.40}
+    e_j^n := c_j^n - \tilde{c}_j^n
+\end{equation*}
+$$
+
+为**绝对误差**, 其中 (不妨设置 $u > 0$)
+
+$$
+\begin{equation*}
+    \tag{1.41}
+    \tilde{c}_j^n := c^0(x_j - n \tau u)
+\end{equation*}
+$$
+
+是一维平流问题 (1.1) 的精确解. 由 (1.38) 得误差传递关系
+
+$$
+\begin{align*}
+    \tag{1.42a}
+    e_j^{n+1} - e_{j-1}^n & = (-1)(e^n_{j+1} - e^{n-1}_j) \\
+    \tag{1.42b}
+    & = (-1)^n (e^1_{j+n} - e^0_{j+n-1}),
+\end{align*}
+$$
+
+进而
+
+$$
+\begin{equation*}
+    \tag{1.42c}
+    e_j^{n+1} = e^0_{j-n-1} + \sum_{k = 0}^{n} {(-1)^k e^1_{j-n+2k}}.
+\end{equation*}
+$$
+
+设初始状态被精确离散 (i.e., $e^0 = 0$), 且首个时间步的积分引入误差
+
+$$
+\begin{equation*}
+    \tag{1.43}
+    e_j^1 = A \cos{(j \pi / 2)} + B \sin{(j \pi / 2)},
+\end{equation*}
+$$
+
+则由 (1.42c)(1.43) 得
+
+$$
+\begin{equation*}
+    \tag{1.44}
+    \begin{aligned}
+        e_j^{n+1} & = \sum_{k = 0}^{n} {
+        (-1)^k \left[ A \cos{(k\pi + (j-n) \pi / 2)} + B \sin{(k\pi + (j-n) \pi / 2)} \right]
+    } \\
+    & = \sum_{k = 0}^{n} {
+        \left[ A \cos{((j-n) \pi / 2)} + B \sin{((j-n) \pi / 2)} \right]
+    },
+    \end{aligned}
+\end{equation*}
+$$
+
+进而长度为 $M$ 的误差向量 $e^n$ 的 $L_2$-norm 满足
+
+$$
+\begin{equation*}
+    \tag{1.45}
+    M^{-1/2} \| e^n \|_2 \to n \sqrt{(A^2 + B^2) / 2}, \quad (M \to +\infty),
+\end{equation*}
+$$
+
+即误差按 $\mathcal{O}(n) = \mathcal{O}(\tau^{-1})$ 量级增长, LF_CD scheme (1.13) is un-stable and in-consistent. 而若首个时间步积分没有误差, 则用 $\mathrm{Cr} = 1$ 的 LF_CD scheme (1.13) 将得到精确解 (1.39); 但这种临界稳定状态很危险, 首步积分稍有误差就可能 blows up, 所以最好让更严格的 (1.22) 即 (1.37) 成立以保证稳定性.
+
+&ensp; &emsp; 从时域分析得到的 Eq. (1.45), 与从 Fourier 频域分析得到 Eq. (1.39) 意义相近, 都是说 $\mathrm{Cr} \, \sin{(\xi h)} = \pm 1$ 的单色波经过 LF_CD 格式 (1.3) 会 blows up. 然而, 时域和频域结果在细节上似乎有些差异. 例如, 时域结果 (1.39)(1.45) 能解释本文第 **1(a)** 节图 (c) 为何在临界稳定的情况下能得到精确解, 而这似乎是频域分析结果 Eq. (1.39) 所不能直接做到的. <b style="color: blue;">对这种差异的数学和物理解释, 可能是重要的, which 关系对 von Neumann 分析方法的准确理解. 我在此呼吁进一步讨论, 请求有兴趣的读者提供帮助! 文末附有[联系方式](mailto:313017602@qq.com).</b>
+
+&ensp; &emsp; **(d)** 为缓解 Leap-frog central diff. 格式 (1.13) 的稳定振荡 (computational mode) 现象, 一种方案是引入 Robert–Asselin (RA) time filter (Robert[^2], [1966](https://doi.org/10.2151/jmsj1965.44.5_237); Asselin[^3], [1972](https://doi.org/10.1175/1520-0493(1972)100<0487:FFFTI>2.3.CO;2)). 具体来说, 就是在**每次**完成 $t_{n+1}$ 时步的积分**之后**, 执行赋值语句 (Ferziger[^5] *et al*., [2020](https://doi.org/10.1007/978-3-319-99693-6), Eq. (6.47))
+
+$$
+\begin{equation*}
+    \tag{1.46}
     c^n_i \leftarrow c_i^n + \frac{\nu}{2}\left( c_{i}^{n+1} - 2c_i^{n} + c_{i}^{n-1} \right) = c_i^n + d_f.
 \end{equation*}
 $$
 
-针对 RA time filter (1.38) 引入的 undesired numerical damping 和精度下降的问题, Williams[^4] ([2009](https://doi.org/10.1175/2009MWR2724.1)) 对 (1.38) 提出改进 (Ferziger[^5] *et al*., [2020](https://doi.org/10.1007/978-3-319-99693-6), Eq. (6.48)(6.49)),
+针对 RA time filter (1.46) 引入的 undesired numerical damping 和精度下降的问题, Williams[^4] ([2009](https://doi.org/10.1175/2009MWR2724.1)) 对 (1.38) 提出改进 (Ferziger[^5] *et al*., [2020](https://doi.org/10.1007/978-3-319-99693-6), Eq. (6.48)(6.49)),
 
 $$
 \begin{align*}
-    \tag{1.39a}
+    \tag{1.47a}
     & c^n_i \leftarrow c_i^n + \alpha d_f, \\
-    \tag{1.39b}
+    \tag{1.47b}
     & c^{n+1}_i \leftarrow c_i^{n+1} - (1 - \alpha) d_f.
 \end{align*}
 $$
 
-通常, 滤波器参数 $\nu$ 取 0.01–0.2, 且取 $\alpha \ge 0.5$ 以保证稳定性. Eq. (1.38)(1.39) 的几何意义示于下图 (Williams, [2009](https://doi.org/10.1175/2009MWR2724.1), his Fig. 1).
+通常, 滤波器参数 $\nu$ 取 0.01–0.2, 且取 $\alpha \ge 0.5$ 以保证稳定性. Eq. (1.46)(1.47) 的几何意义示于下图 (Williams, [2009](https://doi.org/10.1175/2009MWR2724.1), his Fig. 1).
 
 [![Fig. 1. of Williams (2009, doi: 10.1175/2009MWR2724.1)](https://journals.ametsoc.org/view/journals/mwre/137/8/i1520-0493-137-8-2538-f01.gif "Fig. 1. of Williams (2009, doi: 10.1175/2009MWR2724.1). Graphical comparison of the operation of (a) the standard Robert–Asselin filter and (b) the modified family of filters proposed in this paper. Points at three consecutive time levels are shown (marked with times signs) and a straight line is drawn between the two outer points (dashed). The standard filter moves the inner point through a displacement d, defined by (1). The modified filter moves the inner and right outer points through displacements αd and (α − 1)d, respectively, where 0 ≤ α ≤ 1. For the configuration of three points shown, d > 0.")](https://doi.org/10.1175/2009MWR2724.1)
 
@@ -525,7 +621,7 @@ $$
 
 [^5]: Joel H. Ferziger, Milovan Perić & Robert L. Street (2020). *Computational Methods for Fluid Dynamics* [Book]. Springer Cham. <https://doi.org/10.1007/978-3-319-99693-6>
 
-&ensp; &emsp; 用 Matlab 编程, 为格式 (1.3) 添加 RA time filter (1.38). 数值积分结果表明, 当 $\nu = 0.05$, 虚假振荡现象略有改善, 但临界稳定 $\mathrm{Cr}$ 由 $1$ 左移至约 $0.98$. 若增大 $\nu$ 至 $\nu = 1$, 则虚假振荡被进一步消除, 但物理信号也被过度衰减, 且临界稳定 $\mathrm{Cr}$ 进一步左移至约 0.60, 使时间步长的取值被限制. 若引入 Williams ([2009](https://doi.org/10.1175/2009MWR2724.1)) 的改进 (1.39), 则物理信号被过度衰减的问题可获改善, 但虚假振荡的消除效果亦被削弱. 可通过优化滤波器参数 $\nu$ 和 $\alpha$ 的选取, 使数值积分取得更优效果. 该实验体现了多参数联合调优在数值积分性能优化工作中的意义.
+&ensp; &emsp; 用 Matlab 编程, 为格式 (1.3) 添加 RA time filter (1.46). 数值积分结果表明, 当 $\nu = 0.05$, 虚假振荡现象略有改善, 但临界稳定 $\mathrm{Cr}$ 由 $1$ 左移至约 $0.98$. 若增大 $\nu$ 至 $\nu = 1$, 则虚假振荡被进一步消除, 但物理信号也被过度衰减, 且临界稳定 $\mathrm{Cr}$ 进一步左移至约 0.60, 使时间步长的取值被限制. 若引入 Williams ([2009](https://doi.org/10.1175/2009MWR2724.1)) 的改进 (1.47), 则物理信号被过度衰减的问题可获改善, 但虚假振荡的消除效果亦被削弱. 可通过优化滤波器参数 $\nu$ 和 $\alpha$ 的选取, 使数值积分取得更优效果. 该实验体现了多参数联合调优在数值积分性能优化工作中的意义.
 
 ![RA time filter with ν = 0.05 and α = 1](fig/fig_LF_RA_CD_nu_0.05_alpha_1_Cr_compare_1.svg "RA time filter with ν = 0.05 and α = 1")
 
@@ -572,7 +668,7 @@ $$
 \end{equation*}
 $$
 
-满足 von Neumann 条件
+满足加强的 von Neumann 条件 (1.22)
 
 $$
 \begin{equation*}

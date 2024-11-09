@@ -2,7 +2,7 @@
 % Description: Solving the 1-D or 2-D advection problem: c_t + u c_x + v c_y = 0, u, v constants
 % Author: Guorui Wei (危国锐) (313017602@qq.com)
 % Created at: Oct. 21, 2024
-% Last modified: Nov. 7, 2024
+% Last modified: Nov. 9, 2024
 %
 
 %%
@@ -10,7 +10,7 @@
 classdef AdvecProb2D < handle
     properties (Constant)
         PARAMS_REQUIRED = ["velocity","t_start","x_range","init_func","bndry_func", "delta_t", "delta_x", "t_query"];
-        SCHEME_NAME = ["time_forward_Euler_space_upwind", "time_forward_Euler_space_central_diff", "time_forward_Euler_space_CTU"];
+        SCHEME_NAME = ["time_forward_Euler_space_upwind", "time_forward_Euler_space_central_diff", "time_forward_Euler_space_CTU", "time_leap_frog_RA_space_central_diff"];
     end
 
     properties (Access=private)
@@ -87,16 +87,17 @@ classdef AdvecProb2D < handle
             scheme_name = obj.scheme_name;
         end
 
-        function obj = solve(obj, scheme_name, ra_opts)
+        function obj = solve(obj, scheme_name, disturb_func_first_step, ra_opts)
             arguments (Input)
                 obj 
                 scheme_name
+                disturb_func_first_step = @(x) 0;
                 ra_opts.nu = 0;
                 ra_opts.alpha = 1;
             end
 
             if isscalar(obj.velocity)
-                [obj.f_list, obj.x_grid, obj.t_list] = obj.solve_1D(scheme_name, nu=ra_opts.nu, alpha=ra_opts.alpha);
+                [obj.f_list, obj.x_grid, obj.t_list] = obj.solve_1D(scheme_name, disturb_func_first_step, nu=ra_opts.nu, alpha=ra_opts.alpha);
                 return
             end
             if length(obj.velocity) == 2
@@ -107,10 +108,11 @@ classdef AdvecProb2D < handle
     end
 
     methods (Access=private)
-        function [f_list, x_grid, t_list] = solve_1D(obj, scheme_name, ra_opts)
+        function [f_list, x_grid, t_list] = solve_1D(obj, scheme_name, disturb_func_first_step, ra_opts)
             arguments (Input)
                 obj
                 scheme_name;
+                disturb_func_first_step = @(x) sin(pi / 2 / obj.delta_x * x) + cos(pi / 2 / obj.delta_x * x);
                 ra_opts.nu = 0; % Robert-Asselin filter params
                 ra_opts.alpha = 1;
             end
@@ -144,6 +146,7 @@ classdef AdvecProb2D < handle
                 time_start = tic;
                 t_now_last_rec = t_last;
 
+                flag_first_step = true;
                 while t_now < obj.t_query(end)
                     t_now = t_last + obj.delta_t;
 
@@ -185,6 +188,12 @@ classdef AdvecProb2D < handle
                         end
                         f_last_expanded = [halo_left; f_last; halo_right];
                         f_now = f_last_expanded(1 + length(halo_left) : end-length(halo_right)) + sign(obj.velocity)*Cr(1)/2*(f_last_expanded(length(halo_left) : -1 + end-length(halo_right)) - f_last_expanded(2 + length(halo_left) : 1 + end-length(halo_right)));
+                    end
+
+                    % 添加首步扰动
+                    if flag_first_step
+                        flag_first_step = false;
+                        f_now = f_now + disturb_func_first_step(x_grid{1});
                     end
 
                     % store solution at queried time.
@@ -246,6 +255,9 @@ classdef AdvecProb2D < handle
                         + abs(Cr(1))*(obj.velocity > 0)*f_llast_expanded(length(halo_left) : -1 + end - length(halo_right)) ...
                         + abs(Cr(1))*(obj.velocity < 0)*f_llast_expanded(2 + length(halo_left) : 1 + end - length(halo_right));
                 
+                % 添加首步扰动
+                f_last = f_last + disturb_func_first_step(x_grid{1});
+                
                 % 用于记录进度
                 REC_TIME_INT = 5; % seconds
                 time_start = tic;
@@ -305,7 +317,7 @@ classdef AdvecProb2D < handle
 
                 fprintf("%s\n\tscheme_name = %s,\n\tFinished.\n\tt_list = [%s]\n", datetime('now'), scheme_name, join(string(t_list), ", "));
                 return
-            end % end of 
+            end % end of `if ismember(scheme_name, ["time_leap_frog_RA_space_central_diff"])`
 
             warning("Invalid scheme_name. Please choose one of the following options: %s", join(AdvecProb2D.SCHEME_NAME, ", "));
         end % end of `function [f_list, x_grid, t_list] = solve_1D(obj, scheme_name)`

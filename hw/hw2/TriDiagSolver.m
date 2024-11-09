@@ -42,10 +42,8 @@ classdef TriDiagSolver < handle
         function obj = reset(obj, tri_diag_coeff_mat, const_vec)
             arguments
                 obj
-                tri_diag_coeff_mat = [NaN, 2, 1;
-                                      1, 2, 1;
-                                      1, 2, NaN];
-                const_vec = [4; 8; 8];
+                tri_diag_coeff_mat = [];
+                const_vec = [];
             end
             obj.clear();
             obj.tri_diag_coeff_mat__ = tri_diag_coeff_mat;

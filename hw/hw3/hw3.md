@@ -587,7 +587,15 @@ $$
 
 即误差按 $\mathcal{O}(n) = \mathcal{O}(\tau^{-1})$ 量级增长, LF_CD scheme (1.13) is un-stable and in-consistent. 而若首个时间步积分没有误差, 则用 $\mathrm{Cr} = 1$ 的 LF_CD scheme (1.13) 将得到精确解 (1.39); 但这种临界稳定状态很危险, 首步积分稍有误差就可能 blows up, 所以最好让更严格的 (1.22) 即 (1.37) 成立以保证稳定性.
 
-&ensp; &emsp; 从时域分析得到的 Eq. (1.45), 与从 Fourier 频域分析得到 Eq. (1.39) 意义相近, 都是说 $\mathrm{Cr} \, \sin{(\xi h)} = \pm 1$ 的单色波经过 LF_CD 格式 (1.3) 会 blows up. 然而, 时域和频域结果在细节上似乎有些差异. 例如, 时域结果 (1.39)(1.45) 能解释本文第 **1(a)** 节图 (c) 为何在临界稳定的情况下能得到精确解, 而这似乎是频域分析结果 Eq. (1.39) 所不能直接做到的. <b style="color: blue;">对这种差异的数学和物理解释, 可能是重要的, which 关系对 von Neumann 分析方法的准确理解. 我在此呼吁进一步讨论, 请求有兴趣的读者提供帮助! 文末附有[联系方式](mailto:313017602@qq.com).</b>
+&ensp; &emsp; 从时域分析得到的 Eq. (1.45), 与从 Fourier 频域分析得到 Eq. (1.39) 意义相近, 都是说 $\mathrm{Cr} \, \sin{(\xi h)} = \pm 1$ 的单色波经过 LF_CD 格式 (1.3) 会 blows up. 然而, 时域和频域结果在细节上似乎有些差异. 例如, 时域结果 (1.39)(1.45) 能解释本文第 **1(a)** 节图 (c) 为何在临界稳定的情况下能得到精确解, 而这似乎是频域分析结果 Eq. (1.39) 所不能直接做到的. <b style="color: blue;">对这种差异的数学和物理解释, 可能是重要的, which 关系对 von Neumann 分析方法的准确理解. 我在此呼吁进一步讨论, 请求有兴趣的读者提供帮助! 文末附有[联系方式](mailto:313017602@qq.com).</b> 下面的简单试验也许可作为讨论的开始.
+
+&ensp; &emsp; 为验证 (1.36) 或 (1.45), 设计了下述实验. 对 LF_CD 格式 (1.13), 提供零初值, 采取周期边界, 周期是扰动信号周期的 $2^{2 + k}, \, k \in \mathbb{N}^*$ 倍. 首步积分采取迎风格式 (参见 [Hw 2 - Problem 2](../hw2/hw2.md#problem-2)), 对首步积分结果添加扰动信号 (1.43), 取不同的 $\text{Cr}$ 作积分. 将扰动改为 (1.43) 的倍频或半频信号, 重复实验. 结果示于下图. 试验结果表明, LF_CD 格式 (1.13) 当取 $\text{Cr} = 1$ 时, 对于 $\xi h = \pi / 2$ 的中频扰动信号不稳定, 误差幅值与积分时间成正比; 对于 $\xi h = \pi / 4$ 的低频信号和 $\xi h = \pi / 1$ 的高频信号稳定 (下图 (c), 下下图 (c) 中误差很小, 但也表现出正比于积分时间的增长趋势, 这如何解释?). 这就验证了 (1.45). 但如何理解 (1.36)?
+
+![fig_disturb_test_4h](fig/fig_disturb_test_4h.svg "首步积分采取迎风格式, 并引入周期为 4h 的扰动. 然后用 LF_CD 格式积分.")
+
+![fig_disturb_test_2h](fig/fig_disturb_test_2h.svg "首步积分采取迎风格式, 并引入周期为 2h 的扰动. 然后用 LF_CD 格式积分.")
+
+![fig_disturb_test_8h](fig/fig_disturb_test_8h.svg "首步积分采取迎风格式, 并引入周期为 8h 的扰动. 然后用 LF_CD 格式积分.")
 
 &ensp; &emsp; **(d)** 为缓解 Leap-frog central diff. 格式 (1.13) 的稳定振荡 (computational mode) 现象, 一种方案是引入 Robert–Asselin (RA) time filter (Robert[^2], [1966](https://doi.org/10.2151/jmsj1965.44.5_237); Asselin[^3], [1972](https://doi.org/10.1175/1520-0493(1972)100<0487:FFFTI>2.3.CO;2)). 具体来说, 就是在**每次**完成 $t_{n+1}$ 时步的积分**之后**, 执行赋值语句 (Ferziger[^5] *et al*., [2020](https://doi.org/10.1007/978-3-319-99693-6), Eq. (6.47))
 
@@ -707,7 +715,7 @@ $$
 % Description: Solving the 1-D advection problem: c_t + u c_x = 0
 % Author: Guorui Wei (危国锐) (313017602@qq.com)
 % Created at: Nov. 7, 2024
-% Last modified: Nov. 7, 2024
+% Last modified: Nov. 9, 2024
 %
 
 clear; clc; close all
@@ -738,6 +746,46 @@ Cr_list = [.50, .25, .57, .60]; % Cr = u delta_t / delta_x
 
 Cr_list = [.50, .25, .57, .60]; % Cr = u delta_t / delta_x
 [f_list, x_grid, t_list] = hw3_1_unit("time_leap_frog_RA_space_central_diff", Cr_list, true, nu=.2, alpha=.53);
+
+%% 首步扰动试验
+
+clc;clear;close all;
+
+scheme_name = "time_leap_frog_RA_space_central_diff";
+Cr_list = [.5, .99, 1, 1.01];
+delta_x = 0.25;
+x_range = {[0, delta_x*4*(2^2)], };
+% init_func = @(x) double(x > 0 & ~(x > .5));
+init_func = @(x) zeros(size(x));
+bndry_func = @(x, t) "periodic";
+t_query = [0, 1, 2, 4, 8, 16];
+ra_opts.nu = 0;
+ra_opts.alpha = 1;
+flag_save = true;
+
+%%% 周期 4h
+
+disturb_func_first_step = @(x) 1*(sin(2*pi / 4 / delta_x * x) + cos(2*pi / 4 / delta_x * x));
+disturb_func_disp_str = "$f_{\rm{dist}} = 1 \cdot (\sin{(2 \pi x / (4h))} + \cos{(2 \pi x / (4h))})$";
+fig_name = "fig_disturb_test_4h";
+
+[f_list, x_grid, t_list] = disturb_test_unit(scheme_name, Cr_list, x_range, init_func, bndry_func, disturb_func_first_step, disturb_func_disp_str, delta_x, t_query, flag_save, fig_name, nu=ra_opts.nu, alpha=ra_opts.alpha);
+
+%%% 周期 2h (Nyquist)
+
+disturb_func_first_step = @(x) 1*(sin(2*pi / 2 / delta_x * x) + cos(2*pi / 2 / delta_x * x));
+disturb_func_disp_str = "$f_{\rm{dist}} = 1 \cdot (\sin{(2 \pi x / (2h))} + \cos{(2 \pi x / (2h))})$";
+fig_name = "fig_disturb_test_2h";
+
+[f_list, x_grid, t_list] = disturb_test_unit(scheme_name, Cr_list, x_range, init_func, bndry_func, disturb_func_first_step, disturb_func_disp_str, delta_x, t_query, flag_save, fig_name, nu=ra_opts.nu, alpha=ra_opts.alpha);
+
+%%% 周期 8h
+
+disturb_func_first_step = @(x) 1*(sin(2*pi / 8 / delta_x * x) + cos(2*pi / 8 / delta_x * x));
+disturb_func_disp_str = "$f_{\rm{dist}} = 1 \cdot (\sin{(2 \pi x / (8h))} + \cos{(2 \pi x / (8h))})$";
+fig_name = "fig_disturb_test_8h";
+
+[f_list, x_grid, t_list] = disturb_test_unit(scheme_name, Cr_list, x_range, init_func, bndry_func, disturb_func_first_step, disturb_func_disp_str, delta_x, t_query, flag_save, fig_name, nu=ra_opts.nu, alpha=ra_opts.alpha);
 
 %% Function: Unit
 
@@ -876,6 +924,107 @@ function [f_list, x_grid, t_list] = hw3_1_unit(scheme_name, Cr_list, flag_save, 
     end
 
 end
+
+%% Func: 首步扰动试验
+
+function [f_list, x_grid, t_list] = disturb_test_unit(scheme_name, Cr_list, x_range, init_func, bndry_func, disturb_func_first_step, disturb_func_disp_str, delta_x, t_query, flag_save, fig_name, ra_opts)
+    arguments (Input)
+        scheme_name = "time_leap_frog_RA_space_central_diff";
+        Cr_list = [.5, .99, 1, 1.01];
+        x_range = {[0, 2], };
+        init_func = @(x) 5*double(x > 0 & ~(x > .5));
+        bndry_func = @(x, t) "periodic";
+        disturb_func_first_step = @(x) sin(pi / 2 / obj.delta_x * x) + cos(pi / 2 / obj.delta_x * x);
+        disturb_func_disp_str = "$f_{\rm{dist}} = \sin{(\pi x / (2h))} + \cos{(\pi x / (2h))}$";
+        delta_x = 0.05;
+        t_query = [0, 1, 2, 3];
+        flag_save = false;
+        fig_name = "fig_disturb_test";
+        ra_opts.nu = 0;
+        ra_opts.alpha = 1;
+    end
+    
+    solver = AdvecProb2D();
+
+    %%% Solver params (1-D Advection problem)
+
+    velocity = [1, ];
+    t_start = 0;
+    % x_range = {[0, 4], };
+    % init_func = @(x) double(x > 0 & ~(x > .5));
+    % bndry_func = @(x, t) double(x > x_range{1}(1) & x < x_range{1}(2));
+    % delta_x = 0.05;
+    % t_query = [0, 1, 2, 3];
+
+    %%% Solving
+
+    % Cr_list = [.5, .99, 1, 1.01]; % Cr = u delta_t / delta_x
+    f_list = cell(length(Cr_list), 1);
+    x_grid = f_list;
+    t_list = x_grid;
+    for test_idx = 1:length(Cr_list)
+        Cr = Cr_list(test_idx);
+        delta_t =  Cr * delta_x / velocity(1);
+        params_struct = AdvecProb2D.prepare_params(velocity, t_start, x_range, init_func, bndry_func, delta_t, delta_x, t_query);
+        solver.reset(params_struct);
+        solver.solve(scheme_name, disturb_func_first_step, nu=ra_opts.nu, alpha=ra_opts.alpha);
+        [f_list{test_idx}, x_grid{test_idx}, t_list{test_idx}, ~] = solver.get_solution();
+    end
+
+    %%% Create figure
+    switch scheme_name
+        case "time_forward_Euler_space_upwind"
+            scheme_name_short = "upwind";
+        case "time_forward_Euler_space_central_diff"
+            scheme_name_short = "central diff.";
+        case "time_leap_frog_RA_space_central_diff"
+            scheme_name_short = "LF\_RA\_CD";
+        otherwise
+            scheme_name_short = "unknown scheme";
+    end
+
+    t_fig = figure(Name=fig_name);
+
+    % set figure size
+    UNIT_ORIGINAL = t_fig.Units;
+    t_fig.Units = "centimeters";
+    t_fig.Position = [3, 3, 16, 16];
+    t_fig.Units = UNIT_ORIGINAL;
+
+    % plot
+    t_TCL = tiledlayout(t_fig, floor(length(Cr_list) / 2), 2, TileSpacing="compact", Padding="compact");
+    xlabel(t_TCL, "$x$", Interpreter="latex", FontSize=10.5);
+    ylabel(t_TCL, "(numerical, " + scheme_name_short + ") $f$ (subjected to $f_{t} + u f_x = 0, \; f|_{t = 0} = f^0, \; f|_{x \in \partial \Omega} = 0$)", Interpreter="latex", FontSize=10.5);
+    if scheme_name == "time_leap_frog_RA_space_central_diff"
+        title(t_TCL, {"$c^n_i \leftarrow c_i^n + \alpha d_f, \; c^{n+1}_i \leftarrow c_i^{n+1} - (1 - \alpha) d_f, \; d_f = \frac{\nu}{2} \left( c_{i}^{n+1} - 2c_i^{n} + c_{i}^{n-1} \right)$"; ...
+                      sprintf("$\\nu$ = %.3g, $\\alpha$ = %.3g, $\\quad$ %s", ra_opts.nu, ra_opts.alpha, disturb_func_disp_str) ...
+                      }, Interpreter="latex", FontSize=10.5);
+    end
+
+    for test_idx = 1:length(Cr_list)
+        t_axes = nexttile(t_TCL, test_idx);
+        hold(t_axes, "on");
+        for t_query_idx = 1:length(t_list{test_idx})
+            plot(t_axes, x_grid{test_idx}{1}, f_list{test_idx}{t_query_idx}, LineWidth=1.0, DisplayName=sprintf("$t = %.2f$", t_list{test_idx}(t_query_idx)))
+        end
+        set(t_axes, FontName="Times New Roman", FontSize=10.5, Box="on", TickLabelInterpreter="latex", ...
+            Tag=sprintf("(%c) $\\mathrm{Cr} = %g$", char('a' - 1 + test_idx), Cr_list(test_idx)));
+        legend(t_axes, Location="northwest", Interpreter="latex", FontSize=10.5, Box="off");
+    end
+
+    for t_axes = findobj(t_TCL, 'Type', "Axes", {'-regexp', 'Tag', "^\([a-z]+\)"}).'
+        str_{1} = "\bf " + t_axes.Tag;
+        t_txt_box = annotation(t_fig, "textbox", String=str_, Position=[t_axes.Position([1, 2]) + t_axes.Position([3, 4]), .1, .1], FontSize=10.5, Interpreter="latex", LineStyle="none", HorizontalAlignment="right", VerticalAlignment="top");
+        UNIT_ORIGINAL = t_txt_box.Units;
+        t_txt_box.Units = "points";
+        t_txt_box.Position = [t_txt_box.Position([1,2]) - [10.5*10, 10.5*1.5], 10.5*10, 10.5*1.5];
+        t_txt_box.Units = UNIT_ORIGINAL;
+    end
+
+    if flag_save
+        print(t_fig, ".\fig\" + t_fig.Name + ".svg", "-vector", "-dsvg")
+    end
+end
 ```
 
 #### AdvecProb2D.m
@@ -885,7 +1034,7 @@ end
 % Description: Solving the 1-D or 2-D advection problem: c_t + u c_x + v c_y = 0, u, v constants
 % Author: Guorui Wei (危国锐) (313017602@qq.com)
 % Created at: Oct. 21, 2024
-% Last modified: Nov. 7, 2024
+% Last modified: Nov. 9, 2024
 %
 
 %%
@@ -893,7 +1042,7 @@ end
 classdef AdvecProb2D < handle
     properties (Constant)
         PARAMS_REQUIRED = ["velocity","t_start","x_range","init_func","bndry_func", "delta_t", "delta_x", "t_query"];
-        SCHEME_NAME = ["time_forward_Euler_space_upwind", "time_forward_Euler_space_central_diff", "time_forward_Euler_space_CTU"];
+        SCHEME_NAME = ["time_forward_Euler_space_upwind", "time_forward_Euler_space_central_diff", "time_forward_Euler_space_CTU", "time_leap_frog_RA_space_central_diff"];
     end
 
     properties (Access=private)
@@ -970,16 +1119,17 @@ classdef AdvecProb2D < handle
             scheme_name = obj.scheme_name;
         end
 
-        function obj = solve(obj, scheme_name, ra_opts)
+        function obj = solve(obj, scheme_name, disturb_func_first_step, ra_opts)
             arguments (Input)
                 obj 
                 scheme_name
+                disturb_func_first_step = @(x) 0;
                 ra_opts.nu = 0;
                 ra_opts.alpha = 1;
             end
 
             if isscalar(obj.velocity)
-                [obj.f_list, obj.x_grid, obj.t_list] = obj.solve_1D(scheme_name, nu=ra_opts.nu, alpha=ra_opts.alpha);
+                [obj.f_list, obj.x_grid, obj.t_list] = obj.solve_1D(scheme_name, disturb_func_first_step, nu=ra_opts.nu, alpha=ra_opts.alpha);
                 return
             end
             if length(obj.velocity) == 2
@@ -990,10 +1140,11 @@ classdef AdvecProb2D < handle
     end
 
     methods (Access=private)
-        function [f_list, x_grid, t_list] = solve_1D(obj, scheme_name, ra_opts)
+        function [f_list, x_grid, t_list] = solve_1D(obj, scheme_name, disturb_func_first_step, ra_opts)
             arguments (Input)
                 obj
                 scheme_name;
+                disturb_func_first_step = @(x) sin(pi / 2 / obj.delta_x * x) + cos(pi / 2 / obj.delta_x * x);
                 ra_opts.nu = 0; % Robert-Asselin filter params
                 ra_opts.alpha = 1;
             end
@@ -1027,6 +1178,7 @@ classdef AdvecProb2D < handle
                 time_start = tic;
                 t_now_last_rec = t_last;
 
+                flag_first_step = true;
                 while t_now < obj.t_query(end)
                     t_now = t_last + obj.delta_t;
 
@@ -1068,6 +1220,12 @@ classdef AdvecProb2D < handle
                         end
                         f_last_expanded = [halo_left; f_last; halo_right];
                         f_now = f_last_expanded(1 + length(halo_left) : end-length(halo_right)) + sign(obj.velocity)*Cr(1)/2*(f_last_expanded(length(halo_left) : -1 + end-length(halo_right)) - f_last_expanded(2 + length(halo_left) : 1 + end-length(halo_right)));
+                    end
+
+                    % 添加首步扰动
+                    if flag_first_step
+                        flag_first_step = false;
+                        f_now = f_now + disturb_func_first_step(x_grid{1});
                     end
 
                     % store solution at queried time.
@@ -1129,6 +1287,9 @@ classdef AdvecProb2D < handle
                         + abs(Cr(1))*(obj.velocity > 0)*f_llast_expanded(length(halo_left) : -1 + end - length(halo_right)) ...
                         + abs(Cr(1))*(obj.velocity < 0)*f_llast_expanded(2 + length(halo_left) : 1 + end - length(halo_right));
                 
+                % 添加首步扰动
+                f_last = f_last + disturb_func_first_step(x_grid{1});
+                
                 % 用于记录进度
                 REC_TIME_INT = 5; % seconds
                 time_start = tic;
@@ -1188,7 +1349,7 @@ classdef AdvecProb2D < handle
 
                 fprintf("%s\n\tscheme_name = %s,\n\tFinished.\n\tt_list = [%s]\n", datetime('now'), scheme_name, join(string(t_list), ", "));
                 return
-            end % end of 
+            end % end of `if ismember(scheme_name, ["time_leap_frog_RA_space_central_diff"])`
 
             warning("Invalid scheme_name. Please choose one of the following options: %s", join(AdvecProb2D.SCHEME_NAME, ", "));
         end % end of `function [f_list, x_grid, t_list] = solve_1D(obj, scheme_name)`

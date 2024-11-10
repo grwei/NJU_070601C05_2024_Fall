@@ -75,7 +75,7 @@ t_fig = figure(Name="fig_3_SI_CD_stability");
 % set figure size
 UNIT_ORIGINAL = t_fig.Units;
 t_fig.Units = "centimeters";
-t_fig.Position = [3, 3, 16, 16];
+t_fig.Position = [3, 3, 12, 12];
 t_fig.Units = UNIT_ORIGINAL;
 t_TCL = tiledlayout(t_fig, 1, 1, TileSpacing="compact", Padding="tight");
 t_axes = nexttile(t_TCL, 1);
@@ -98,14 +98,13 @@ ylabel(t_axes, "$r := D \tau / h^2$", Interpreter="latex", FontSize=10.5);
 grid(t_axes, "on");
 legend(t_axes, h, Box="off", Location="best", Interpreter="latex", FontSize=10.5)
 
-title(t_TCL, {"(SI\_CD) $r \theta (c_{j-1}^{n+1} + c^{n+1}_{j+1}) + (1 + 2r \theta) c_j^{n+1} = r(1 - \theta) (c^n_{j-1} + c^n_{j+1}) + (1 - 2r (1 - \theta))$"; ...
-              }, ...
-              Interpreter="latex", FontSize=10.5);
+title(t_axes, "\bf amplification factor for SI\_CD scheme", Interpreter="latex", FontSize=10.5);
 
-t_txt_box = annotation(t_fig, "textbox", String="$$G = \frac{1 - 2r(1 - \theta) (1 - \cos{(\xi h)})}{1 + 2r \theta (1 - \cos{(\xi h)})}, \quad |\xi h| \le \pi$$", Position=[t_axes.Position([1, 2]) + t_axes.Position([3, 4])*0.7, .1, .1], FontSize=10.5, Interpreter="latex", LineStyle="none", HorizontalAlignment="right", VerticalAlignment="top");
+t_txt_box = annotation(t_fig, "textbox", String="$$G = \frac{1 - 2r(1 - \theta) (1 - \cos{(\xi h)})}{1 + 2r \theta (1 - \cos{(\xi h)})}, \quad |\xi h| \le \pi$$", ...
+                        Position=[t_axes.Position([1, 2]) + t_axes.Position([3, 4]).*[0, .2], t_axes.Position(3), .1], FontSize=10.5, Interpreter="latex", LineStyle="none", HorizontalAlignment="center", VerticalAlignment="middle");
 UNIT_ORIGINAL = t_txt_box.Units;
 t_txt_box.Units = "points";
-t_txt_box.Position = [t_txt_box.Position([1,2]) - [10.5*0, 10.5*5], 10.5*10, 10.5*5];
+t_txt_box.Position = [t_txt_box.Position([1,2,3]), 10.5*3];
 t_txt_box.Units = UNIT_ORIGINAL;
 
 if true

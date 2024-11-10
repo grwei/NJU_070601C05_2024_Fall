@@ -585,7 +585,7 @@ $$
 \end{equation*}
 $$
 
-进而长度为 $M$ 的误差向量 $e^n$ 的 $L_2$-norm 满足
+进而长度为 $M$ 的误差向量 $e^n$ 的 $L^2$-norm 满足
 
 $$
 \begin{equation*}

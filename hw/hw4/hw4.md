@@ -225,11 +225,60 @@ $$
 
 ![fig_3](fig/fig_3_SI_CD_stability.svg "SI_CD scheme, von Neumann analysis")
 
-&ensp; &emsp; **(c)** 比较 (a) 小节图的四个子图, 发现与 $\theta = 0.5, 0.75, 1$ 的积分结果 (SI_CD 方案) 相比, $\theta = 0$ (FE_CD 方案) 的数值扩散速度在积分初期偏慢, 在第一个时步只扩散了一个空间网格距, 小于 SI_CD 方案的. 随着积分的进行, 四种 $\theta$ 取值的积分结果的差异变得很小, 似乎都收敛到同一个稳态解.
+&ensp; &emsp; **(c)** 比较 (a) 小节图的四个子图, 发现与 $\theta = 0.5, 0.75, 1$ 的积分结果 (SI_CD 方案) 相比, $\theta = 0$ (FE_CD 方案) 的数值扩散速度在积分初期较慢, 在第一个时步只扩散了一个空间网格距, 小于 SI_CD 方案的. 随着积分的进行, 四种 $\theta$ 取值的积分结果的差异变得很小, 似乎都收敛到同一个稳态解.
+
+&ensp; &emsp; 下面对 SI_CD 格式 (1.2) 作 modified equation analysis. 满足 (1.2) 的 $\tilde{c} \in C^{\infty}(\mathbb{\Omega \times \mathbb{R}^+})$ 成立 modified equation
+
+$$
+\begin{equation*}
+    \tag{1.9a}
+    \tilde{c}_t - D \tilde{c}_{x^2} = - \frac{\tau}{2} \tilde{c}_{t^2} + \tau D \theta \tilde{c}_{x^2 t} + \frac{h^2}{12} D \tilde{c}_{x^4} + \mathcal{O}(\tau^2 + \tau h^2 + h^4).
+\end{equation*}
+$$
+
+在 (1.9a) 的推导中, 利用了由二元 Taylor 展开得到的
+
+$$
+\begin{equation*}
+    \tag{1.10}
+    \tilde{c}^{n+1}_{j+1} - 2 \tilde{c}^{n+1}_{j} + \tilde{c}^{n+1}_{j-1} = h^2 \tilde{c}_{x^2} + \tau h^2 \tilde{c}_{x^2 t} + \frac{h^4}{12} \tilde{c}_{x^4} + {\color{grey}{\frac{\tau^2 h^2}{12} \tilde{c}_{x^2 t^2}}} + \mathcal{O}(\tau h^4 + {\color{grey}{\tau^3 h^2}}).
+\end{equation*}
+$$
+
+为了将 (1.9a) 右端的时间导数项改写为空间导数, 让 (1.9a) 分别被 $\partial_t, \partial_{x^2}$ 作用, 得
+
+$$
+\begin{align*}
+    \tag{1.11a}
+    \tilde{c}_{t^2} - D \tilde{c}_{x^2 t} = \mathcal{O}(\tau + h^2), \\
+    \tag{1.11b}
+    \tilde{c}_{x^2 t} - D \tilde{c}_{x^4} = \mathcal{O}(\tau + h^2),
+\end{align*}
+$$
+
+进而
+
+$$
+\begin{equation*}
+    \tag{1.12}
+    \tilde{c}_{t^2} = D^2 \tilde{c}_{x^4} + \mathcal{O}(\tau + h^2).
+\end{equation*}
+$$
+
+将 (1.11b)(1.12) 代入 (1.9a), 得
+
+$$
+\begin{equation*}
+    \tag{1.9b}
+    \tilde{c}_t - D \tilde{c}_{x^2} = \tau D^2 \left( \theta - \frac{1}{2} \right) \tilde{c}_{x^4} + \frac{h^2}{12} D \tilde{c}_{x^4} + \mathcal{O}(\tau^2 + \tau h^2 + h^4).
+\end{equation*}
+$$
+
+可见, SI_CD 格式 (1.2) 具有二阶空间精度. 格式具有二阶时间精度, 当且仅当 $\theta = 1/2$, 否则时间精度为一阶.
 
 ## Acknowledgement
 
-&ensp; &emsp; I am grateful to ...
+&ensp; &emsp; I am grateful to [Yunzhu He](https://orcid.org/0000-0003-4723-8609) ([何韵竹](https://nicoleheyz.github.io/)), whose JGR article ([2024](https://doi.org/10.1029/2023JC020667), Fig. 12) reminded me to include a legend for the contour map.
 
 ## Contact Information
 
@@ -321,7 +370,7 @@ t_fig = figure(Name="fig_3_SI_CD_stability");
 % set figure size
 UNIT_ORIGINAL = t_fig.Units;
 t_fig.Units = "centimeters";
-t_fig.Position = [3, 3, 16, 16];
+t_fig.Position = [3, 3, 12, 12];
 t_fig.Units = UNIT_ORIGINAL;
 t_TCL = tiledlayout(t_fig, 1, 1, TileSpacing="compact", Padding="tight");
 t_axes = nexttile(t_TCL, 1);
@@ -344,14 +393,13 @@ ylabel(t_axes, "$r := D \tau / h^2$", Interpreter="latex", FontSize=10.5);
 grid(t_axes, "on");
 legend(t_axes, h, Box="off", Location="best", Interpreter="latex", FontSize=10.5)
 
-title(t_TCL, {"(SI\_CD) $r \theta (c_{j-1}^{n+1} + c^{n+1}_{j+1}) + (1 + 2r \theta) c_j^{n+1} = r(1 - \theta) (c^n_{j-1} + c^n_{j+1}) + (1 - 2r (1 - \theta))$"; ...
-              }, ...
-              Interpreter="latex", FontSize=10.5);
+title(t_axes, "\bf amplification factor for SI\_CD scheme", Interpreter="latex", FontSize=10.5);
 
-t_txt_box = annotation(t_fig, "textbox", String="$$G = \frac{1 - 2r(1 - \theta) (1 - \cos{(\xi h)})}{1 + 2r \theta (1 - \cos{(\xi h)})}, \quad |\xi h| \le \pi$$", Position=[t_axes.Position([1, 2]) + t_axes.Position([3, 4])*0.7, .1, .1], FontSize=10.5, Interpreter="latex", LineStyle="none", HorizontalAlignment="right", VerticalAlignment="top");
+t_txt_box = annotation(t_fig, "textbox", String="$$G = \frac{1 - 2r(1 - \theta) (1 - \cos{(\xi h)})}{1 + 2r \theta (1 - \cos{(\xi h)})}, \quad |\xi h| \le \pi$$", ...
+                        Position=[t_axes.Position([1, 2]) + t_axes.Position([3, 4]).*[0, .2], t_axes.Position(3), .1], FontSize=10.5, Interpreter="latex", LineStyle="none", HorizontalAlignment="center", VerticalAlignment="middle");
 UNIT_ORIGINAL = t_txt_box.Units;
 t_txt_box.Units = "points";
-t_txt_box.Position = [t_txt_box.Position([1,2]) - [10.5*0, 10.5*5], 10.5*10, 10.5*5];
+t_txt_box.Position = [t_txt_box.Position([1,2,3]), 10.5*3];
 t_txt_box.Units = UNIT_ORIGINAL;
 
 if true

@@ -457,7 +457,7 @@ $$
 \end{align*}
 $$
 
-的一个解. 由 (1.15), 有
+的一个解. 由 (1.15), 有 (这结果疑似有问题, 有空用 [MMA](https://www.wolfram.com/) 算算)
 
 $$
 \begin{equation*}
@@ -465,18 +465,27 @@ $$
     \begin{aligned}
         \boldsymbol{C}_j^{n+1} & = P J^n P^{-1} \boldsymbol{C}_j^{1} \\
         & = (\tilde{\lambda})^n \boldsymbol{C}_j^1 - n (\mp \mathrm{i})^n \begin{bmatrix}
-            \mp \mathrm{i} c_j^0 & c^0_j
+            \mp \mathrm{i} c_j^1 & c^0_j
         \end{bmatrix}'.
     \end{aligned}
 \end{equation*}
 $$
 
-Eq. (1.36a) 右端第一项与精确行为 (1.27) 一致, 第二项是幅度不断增长 (是 $\mathcal{O}(\tau^{-1})$ 量级的无穷大量 as $\tau \to 0^+$) 的误差项. 把 (1.36a) 写成
+Eq. (1.36a) 右端第一项与精确行为 (1.27) 一致, 第二项是幅度不断增长 (是 $\mathcal{O}(\tau^{-1})$ 量级的无穷大量 as $\tau \to 0^+$) 的误差项. 把 (1.36a) 写成 ($c^1 = 0$ ??)
 
 $$
 \begin{equation*}
     \tag{1.36b}
-    c_j^n = (1 - n) (\mp \mathrm{i})^n c_j^0 = (1 - n) \tilde{c}_j^0,
+    c_j^n = (1 - n) (\mp \mathrm{i})^n c_j^0 = (1 - n) \tilde{c}_j^n,
+\end{equation*}
+$$
+
+或绝对误差
+
+$$
+\begin{equation*}
+    \tag{1.36c}
+    e_j^n := c_j^n - \tilde{c}_j^n = -n \tilde{c}_j^n,
 \end{equation*}
 $$
 
@@ -589,7 +598,7 @@ $$
 
 &ensp; &emsp; 从时域分析得到的 Eq. (1.45), 与从 Fourier 频域分析得到 Eq. (1.39) 意义相近, 都是说 $\mathrm{Cr} \, \sin{(\xi h)} = \pm 1$ 的单色波经过 LF_CD 格式 (1.3) 会 blows up. 然而, 时域和频域结果在细节上似乎有些差异. 例如, 时域结果 (1.39)(1.45) 能解释本文第 **1(a)** 节图 (c) 为何在临界稳定的情况下能得到精确解, 而这似乎是频域分析结果 Eq. (1.39) 所不能直接做到的. <b style="color: blue;">对这种差异的数学和物理解释, 可能是重要的, which 关系对 von Neumann 分析方法的准确理解. 我在此呼吁进一步讨论, 请求有兴趣的读者提供帮助! 文末附有[联系方式](mailto:313017602@qq.com).</b> 下面的简单试验也许可作为讨论的开始.
 
-&ensp; &emsp; 为验证 (1.36) 或 (1.45), 设计了下述实验. 对 LF_CD 格式 (1.13), 提供零初值, 采取周期边界, 周期是扰动信号周期的 $2^{2 + k}, \, k \in \mathbb{N}^*$ 倍. 首步积分采取迎风格式 (参见 [Hw 2 - Problem 2](../hw2/hw2.md#problem-2)), 对首步积分结果添加扰动信号 (1.43), 取不同的 $\text{Cr}$ 作积分. 将扰动改为 (1.43) 的倍频或半频信号, 重复实验. 结果示于下图. 试验结果表明, LF_CD 格式 (1.13) 当取 $\text{Cr} = 1$ 时, 对于 $\xi h = \pi / 2$ 的中频扰动信号不稳定, 误差幅值与积分时间成正比; 对于 $\xi h = \pi / 4$ 的低频信号和 $\xi h = \pi / 1$ 的高频信号稳定 (下图 (c), 下下图 (c) 中误差很小, 但也表现出正比于积分时间的增长趋势, 这如何解释?). 这就验证了 (1.45). 但如何理解 (1.36)?
+&ensp; &emsp; 为验证 (1.36) 或 (1.45), 设计了下述实验. 对 LF_CD 格式 (1.13), 提供零初值, 采取周期边界, 周期是扰动信号周期 (4 个网格距) 的 $2^{k}, \, k \in \mathbb{N}^*$ 倍. 首步积分采取迎风格式 (参见 [Hw 2 - Problem 2](../hw2/hw2.md#problem-2)), 对首步积分结果添加扰动信号 (1.43), 取不同的 $\text{Cr}$ 作积分. 将扰动改为 (1.43) 的倍频或半频信号, 重复实验. 结果示于下图. 试验结果表明, LF_CD 格式 (1.13) 当取 $\text{Cr} = 1$ 时, 对于 $\xi h = \pi / 2$ 的中频扰动信号不稳定, 误差幅值与积分时间成正比; 对于 $\xi h = \pi / 4$ 的低频信号和 $\xi h = \pi / 1$ 的高频信号稳定 (下图 (c), 下下图 (c) 中误差很小, 但也表现出正比于积分时间的增长趋势, 这如何解释?). 这就验证了 (1.45). 但如何理解 (1.36)?
 
 ![fig_disturb_test_4h](fig/fig_disturb_test_4h.svg "首步积分采取迎风格式, 并引入周期为 4h 的扰动. 然后用 LF_CD 格式积分.")
 
@@ -994,7 +1003,7 @@ function [f_list, x_grid, t_list] = disturb_test_unit(scheme_name, Cr_list, x_ra
     % plot
     t_TCL = tiledlayout(t_fig, floor(length(Cr_list) / 2), 2, TileSpacing="compact", Padding="compact");
     xlabel(t_TCL, "$x$", Interpreter="latex", FontSize=10.5);
-    ylabel(t_TCL, "(numerical, " + scheme_name_short + ") $f$ (subjected to $f_{t} + u f_x = 0, \; f|_{t = 0} = f^0, \; f|_{x \in \partial \Omega} = 0$)", Interpreter="latex", FontSize=10.5);
+    ylabel(t_TCL, "(numerical, " + scheme_name_short + ") $f$ (subjected to $f_{t} + u f_x = 0, \; f|_{t = 0} = f^0, \; f(x, t) = f(x + L, t)$)", Interpreter="latex", FontSize=10.5);
     if scheme_name == "time_leap_frog_RA_space_central_diff"
         title(t_TCL, {"$c^n_i \leftarrow c_i^n + \alpha d_f, \; c^{n+1}_i \leftarrow c_i^{n+1} - (1 - \alpha) d_f, \; d_f = \frac{\nu}{2} \left( c_{i}^{n+1} - 2c_i^{n} + c_{i}^{n-1} \right)$"; ...
                       sprintf("$\\nu$ = %.3g, $\\alpha$ = %.3g, $\\quad$ %s", ra_opts.nu, ra_opts.alpha, disturb_func_disp_str) ...

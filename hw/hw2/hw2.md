@@ -2,7 +2,7 @@
 export_on_save:
   html: true
 html:
-  embed_local_images: false
+  embed_local_images: true
   embed_svg: true
   offline: false
   toc: true
@@ -14,8 +14,9 @@ print_background: true
 - **Course:** Numerical Solutions to PDEs - FALL 2024
 - **Instructor:** Zhou, Bowen ([周博闻](https://as.nju.edu.cn/54/79/c11339a218233/page.htm))
 - **Due date:** Oct. 18, 2024
-- **Submit date:** Oct. 26, 2024
+- **Submitted date:** Oct. 26, 2024
 - **Problem set:** [PS2.pdf](https://box.nju.edu.cn/d/439906db314e411489a3/files/?p=%2FProblemSets%2FPS2.pdf)
+- **Course website:** <https://grwei.github.io/NJU_070601C05_2024_Fall/>
 
 > &ensp; &ensp; Describe the setup and each step in your solutions with words and clearly label your final answers. Use Matlab for plotting and programming and include your code as an appendix to your problem set.
 

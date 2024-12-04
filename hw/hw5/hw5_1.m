@@ -2,7 +2,7 @@
 % Description: Solving the Streeter-Phelps model in a 2-D river
 % Author: Guorui Wei (危国锐) (313017602@qq.com)
 % Created at: Dec. 1, 2024
-% Last modified: Dec. 4, 2024
+% Last modified: Dec. 5, 2024
 %
 
 clc; clear; close all
@@ -63,7 +63,11 @@ for var_ind = 1:length(var_names)
     end
 end
 
-%% 3. 程序结束
+%% 3. 生成视频
+
+hw5_1_movie();
+
+%% 4. 程序结束
 
 fprintf(LOG_FILE_ID, "%s\n\tFinished.\n", string(datetime("now"), "yyyy-MM-dd HH:mm:ss", "en_US"));
 fclose(LOG_FILE_ID);
@@ -272,7 +276,7 @@ function [] = varSpatialTemporalDist(solver, var_ind, time_inds, title_str, fig_
         [max_val, max_ind_lin] = max(var_data, [], "all", "linear");
         [max_ind_x, max_ind_y] = ind2sub(size(var_data), max_ind_lin);
         str_{1} = t_axes.Tag;
-        str_{2} = sprintf("min. = %.2f at (%.2f, %.2f),\nmax. = %.2f at (%.2f, %.2f)", min_val, solver.x_grid(min_ind_x), solver.y_grid(min_ind_y), max_val, solver.x_grid(max_ind_x), solver.y_grid(max_ind_y));
+        str_{2} = sprintf("min. = %.2f at (%.2f, %.2f)\nmax. = %.2f at (%.2f, %.2f)", min_val, solver.x_grid(min_ind_x), solver.y_grid(min_ind_y), max_val, solver.x_grid(max_ind_x), solver.y_grid(max_ind_y));
 
         t_txt_box = annotation(t_fig, "textbox", String=str_{1}, Position=[t_axes.Position([1, 2]) + t_axes.Position([3, 4]), .1, .1], FontSize=10, Interpreter="latex", LineStyle="none", HorizontalAlignment="right", VerticalAlignment="top");
         UNIT_ORIGINAL = t_txt_box.Units;
@@ -291,9 +295,9 @@ function [] = varSpatialTemporalDist(solver, var_ind, time_inds, title_str, fig_
         if ~isfolder(fig_dir)
             mkdir(fig_dir)
         end
-        % print(t_fig, fig_dir + t_fig.Name + ".svg", "-vector", "-dsvg") % 可能导致程序崩溃
+        print(t_fig, fig_dir + t_fig.Name + ".svg", "-vector", "-dsvg") % 可能导致程序崩溃
         exportgraphics(t_fig, fig_dir + t_fig.Name + ".jpg", Resolution=800, BackgroundColor="none");
-        % exportgraphics(t_fig, fig_dir + t_fig.Name + ".pdf", ContentType="vector", BackgroundColor="none"); % 可能导致程序崩溃
+        exportgraphics(t_fig, fig_dir + t_fig.Name + ".pdf", ContentType="vector", BackgroundColor="none"); % 可能导致程序崩溃
         % close(t_fig)
     end
 end

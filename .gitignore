@@ -2,6 +2,9 @@
 
 课程资源/
 ref/
+hw/hw5/fig/
+hw/hw5/lib
+hw/hw5/log
 
 # Windows default autosave extension
 *.asv

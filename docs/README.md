@@ -11,6 +11,8 @@
 - [Problem Set #3](https://grwei.github.io/NJU_070601C05_2024_Fall/hw3.html)
 - [Problem Set #4](https://grwei.github.io/NJU_070601C05_2024_Fall/hw4.html)
 - [Problem Set #5](https://grwei.github.io/NJU_070601C05_2024_Fall/hw5.html)
+- [Problem Set #6](https://grwei.github.io/NJU_070601C05_2024_Fall/hw6.html)
+- [Problem Set #7](https://grwei.github.io/NJU_070601C05_2024_Fall/hw7.html)
 
 ## Class notes
 

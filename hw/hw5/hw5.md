@@ -603,15 +603,15 @@ $$
 
 &ensp; &emsp; 下面是 BOD, DO 浓度随时间变化的动画. 这些动画是使用 Matlab script [`hw5_1_movie.m`](#hw5_1_moviem) 生成的.
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113640975899879&bvid=BV16yqeYhEAE&cid=27310624074&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe style="width: 100%; height: 100%;" src="//player.bilibili.com/player.html?isOutside=true&aid=113640975899879&bvid=BV16yqeYhEAE&cid=27310624074&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
 
 [BOD](fig/movie/mov_1_BOD.avi "BOD")
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113640975897046&bvid=BV1ryqeYhEcX&cid=27310624167&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe style="width: 100%; height: 100%;" src="//player.bilibili.com/player.html?isOutside=true&aid=113640975897046&bvid=BV1ryqeYhEcX&cid=27310624167&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
 
 [DO](fig/movie/mov_1_DO.avi "DO")
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113640975900387&bvid=BV16yqeYhEGP&cid=27310624324&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe style="width: 100%; height: 100%;" src="//player.bilibili.com/player.html?isOutside=true&aid=113640975900387&bvid=BV16yqeYhEGP&cid=27310624324&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
 
 [BOD & DO at river central line](fig/movie/mov_2_central_line.avi "BOD & DO at river central line")
 
